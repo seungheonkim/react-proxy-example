@@ -1,23 +1,40 @@
 import React, { useState } from 'react';
 import './App.css';
 import Header from './components/Header';
-import BookTable from './components/BookTable';
-import DisplayBoard from './components/DisplayBoard';
-import CreateBook from './components/CreateBook';
+import BookBoard from './components/Book/BookBoard';
+import BookTable from './components/Book/BookTable';
+import CreateBook from './components/Book/CreateBook';
+import TodoBoard from './components/Todo/TodoBoard';
+import TodoTable from './components/Todo/TodoTable';
+import CreateTodo from './components/Todo/CreateTodo';
 import { getAllBooks, createBook } from './services/BookService';
+import { getAllTodos, createTodo } from './services/TodoService';
 import Footer from './components/Footer';
 
 function App () {
 
+  //books
   const [bookShelf, setBookShelf] = useState({});
   const [books, setBooks] = useState([]);
   const [numberOfBooks, setNumberBooks] = useState(0);
 
-  const handleSubmit = () => {
+  //Todos
+  const [todoList, setTodoList] = useState({});
+  const [todos, setTodos] = useState([]);
+  const [numberOfTodos, setNumberTodos] = useState(0);
+
+  const handleBookSubmit = () => {
       createBook(bookShelf)
         .then(() => {
           setNumberBooks(numberOfBooks+1);
       });
+  }
+
+  const handleTodoSubmit = () => {
+    createTodo(todoList)
+      .then(() => {
+        setNumberTodos(numberOfTodos+1);
+    });
   }
 
   const getAllBook = () => {
@@ -28,7 +45,15 @@ function App () {
       });
   }
 
-  const handleOnChangeForm = (e) => {
+  const getAllTodo = () => {
+    getAllTodos()
+      .then(data => {
+        setTodos(data);
+        setNumberTodos(data.length);
+      });
+  }
+
+  const handleOnChangeBookForm = (e) => {
       let inputData = bookShelf;
       if (e.target.name === 'book') {
         bookShelf.book = e.target.value;
@@ -40,6 +65,16 @@ function App () {
       setBookShelf(inputData);
   }
 
+  const handleOnChangeTodoForm = (e) => {
+    let inputData = todoList;
+    if (e.target.name === 'todo') {
+      todoList.todo = e.target.value;
+    } else if (e.target.name === 'category') {
+      todoList.category = e.target.value;
+    }
+    setTodoList(inputData);
+}
+
   
   return (
     <div className="main-wrapper">
@@ -47,14 +82,24 @@ function App () {
         <Header />
         <CreateBook 
           bookShelf={bookShelf}
-          onChangeForm={handleOnChangeForm}
-          handleSubmit={handleSubmit}
+          onChangeForm={handleOnChangeBookForm}
+          handleSubmit={handleBookSubmit}
         />
-        <DisplayBoard 
+        <CreateTodo 
+          todoList={todoList}
+          onChangeForm={handleOnChangeTodoForm}
+          handleSubmit={handleTodoSubmit}
+        />
+        <BookBoard 
           numberOfBooks={numberOfBooks} 
           getAllBook={getAllBook} 
         />
+        <TodoBoard 
+          numberOfTodos={numberOfTodos} 
+          getAllTodo={getAllTodo} 
+        />
         <BookTable books={books} />
+        <TodoTable todos={todos} />
         <Footer />
       </div>
     </div>

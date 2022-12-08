@@ -1,6 +1,6 @@
 import React from 'react'
 
-const DisplayBoard = ({numberOfBooks, getAllBook}) => {
+const BookBoard = ({numberOfBooks, getAllBook}) => {
     
     return(
         <div className="display-wrapper">
@@ -19,4 +19,4 @@ const DisplayBoard = ({numberOfBooks, getAllBook}) => {
     )
 }
 
-export default DisplayBoard;
+export default BookBoard;
